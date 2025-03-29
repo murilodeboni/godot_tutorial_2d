@@ -3,13 +3,13 @@ extends CanvasLayer
 # Notifies `Main` node that the button has been pressed
 signal start_game
 
-func show_message(text):
+func show_message(text, timer):
 	$Message.text = text
 	$Message.show()
-	$MessageTimer.start()
+	$MessageTimer.start(timer)
 
 func show_game_over():
-	show_message("Game Over")
+	show_message("Game Over", 2)
 	# Wait until the MessageTimer has counted down.
 	await $MessageTimer.timeout
 
