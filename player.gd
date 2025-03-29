@@ -9,6 +9,7 @@ func start(pos):
 	position = pos
 	show()
 	$CollisionShape2D.disabled = false
+	$AnimatedSprite2D.animation = "walk"
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -50,4 +51,4 @@ func _on_body_entered(body: Node2D) -> void:
 	hide() # Player disappears after being hit.
 	hit.emit()
 	# Must be deferred as we can't change physics properties on a physics callback.
-	$CollisionShape2D.set_deferred("disabled", true)
+	$CollisionShape2D.set_deferred("disabled", true)	

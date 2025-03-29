@@ -22,9 +22,13 @@ func new_game():
 	$Music.play()
 	$StartTimer.start()
 	$HUD.update_score(score)
-	$HUD.show_message("Get Ready")
+	$HTTPRequest.request_completed.connect(_on_request_completed)
+	$HTTPRequest.request("https://api.github.com/repos/godotengine/godot/releases/latest")
 
 
+func _on_request_completed(result, response_code, headers, body):
+	var json = JSON.parse_string(body.get_string_from_utf8())
+	$HUD.show_message(json["name"])
 
 func _on_mob_timer_timeout():
 	# Create a new instance of the Mob scene.
@@ -56,7 +60,6 @@ func _on_mob_timer_timeout():
 
 func _on_score_timer_timeout() -> void:
 	score += 1
-
 
 func _on_start_timer_timeout() -> void:
 	$MobTimer.start()
