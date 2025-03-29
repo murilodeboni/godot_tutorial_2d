@@ -3,8 +3,26 @@ extends Node
 @export var mob_scene: PackedScene
 var score
 
+const API_URL = "http://localhost:11434/api/generate" # local ollama
+
+func send_request(prompt: String, temperature = 0.0):
+	var http_request = HTTPRequest.new()
+	add_child(http_request)
+	http_request.request_completed.connect(_on_request_completed)
+
+	var headers = ["Content-Type: application/json"]
+	var body = JSON.stringify({
+		"model": "llama3.2",
+		"prompt": prompt,
+		"stream": false,
+		"temperature": temperature
+	})
+
+	var error = http_request.request(API_URL, headers, HTTPClient.METHOD_POST, body)
+	if error != OK:
+		print("Request failed: ", error)
+
 func _ready():
-	# new_game() # for testing
 	pass
 
 func game_over():
@@ -13,6 +31,7 @@ func game_over():
 	$MobTimer.stop()
 	$HUD.show_game_over()
 	$Music.stop()
+	send_request("Give me a short inspirational failure quote", 1.0)
 
 
 func new_game():
@@ -22,9 +41,16 @@ func new_game():
 	$Music.play()
 	$StartTimer.start()
 	$HUD.update_score(score)
-	$HUD.show_message("Get Ready")
+	send_request("Send a one-word inspirational start message", 1.0)
 
 
+func _on_request_completed(result, response_code, headers, body):
+	if response_code == 200:
+		var response = body.get_string_from_utf8()
+		var json = JSON.parse_string(body.get_string_from_utf8())
+		$HUD.show_message(json["response"], 5)
+	else:
+		print("Error: ", response_code)
 
 func _on_mob_timer_timeout():
 	# Create a new instance of the Mob scene.
@@ -56,7 +82,6 @@ func _on_mob_timer_timeout():
 
 func _on_score_timer_timeout() -> void:
 	score += 1
-
 
 func _on_start_timer_timeout() -> void:
 	$MobTimer.start()
