@@ -1,0 +1,69 @@
+[gd_scene load_steps=9 format=3 uid="uid://d2a6gbctjrh3p"]
+
+[ext_resource type="Texture2D" uid="uid://64cscd4be5rg" path="res://art/enemyFlyingAlt_1.png" id="1_bi2b5"]
+[ext_resource type="Texture2D" uid="uid://d2b1lt45n1cml" path="res://art/enemyFlyingAlt_2.png" id="2_pll4w"]
+[ext_resource type="Texture2D" uid="uid://dop7acdug50x1" path="res://art/enemySwimming_1.png" id="3_a42hu"]
+[ext_resource type="Texture2D" uid="uid://bvf5qgswno2ns" path="res://art/enemySwimming_2.png" id="4_mcsxq"]
+[ext_resource type="Texture2D" uid="uid://bfifkrbvghlqk" path="res://art/enemyWalking_1.png" id="5_4ohgu"]
+[ext_resource type="Texture2D" uid="uid://cr4p6j66swlu8" path="res://art/enemyWalking_2.png" id="6_3qlkk"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_6kblf"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_bi2b5")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_pll4w")
+}],
+"loop": true,
+"name": &"fly",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("3_a42hu")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_mcsxq")
+}],
+"loop": true,
+"name": &"swim",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("5_4ohgu")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_3qlkk")
+}],
+"loop": true,
+"name": &"walk",
+"speed": 5.0
+}]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_8l7ip"]
+radius = 36.0
+height = 100.0
+
+[node name="RigidBody2D" type="RigidBody2D" groups=["mobs"]]
+gravity_scale = 0.0
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+position = Vector2(0, 1)
+scale = Vector2(0.75, 0.75)
+sprite_frames = SubResource("SpriteFrames_6kblf")
+animation = &"walk"
+speed_scale = 3.0
+metadata/_edit_group_ = true
+
+[node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="."]
+position = Vector2(0, 1)
+metadata/_edit_group_ = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 1)
+rotation = 1.5708
+shape = SubResource("CapsuleShape2D_8l7ip")
+metadata/_edit_group_ = true
